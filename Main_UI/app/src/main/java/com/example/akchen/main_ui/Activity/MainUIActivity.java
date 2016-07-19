@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -38,11 +39,12 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
     private static SectionsPagerAdapter mSectionAdapter = null;
     private static ViewPager mViewPager;
     private PopupMenu main_city = null;
-    private Menu menuItem=null;
+    private Menu menuItem = null;
     private Button main_share = null;
     private LocationSelectorDialogBuilder locationBuilder;
     private static SwipeRefreshLayout fresher;
-    private static Map locatinMap=new HashMap();
+    private static Map locatinMap = new HashMap();
+
 
     public static Map getLocatinMap() {
         return locatinMap;
@@ -54,12 +56,15 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_main_ui);
         getSupportActionBar().hide();
         //
-        SectionsPagerAdapter.getLocationList().add("beijing");
+
         //..........
 
         mSectionAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter.getLocationList().add("beijing");
+
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionAdapter);
+
         fresher = (SwipeRefreshLayout) findViewById(R.id.fresher);
         fresher.setEnabled(false);
         fresher.setOnRefreshListener(
@@ -116,13 +121,12 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
         main_share.setOnClickListener(this);
 
         main_city = new PopupMenu(this, findViewById(R.id.main_city));
-        menuItem=main_city.getMenu();
-        getMenuInflater().inflate(R.menu.pop_main_menu,menuItem);
+        menuItem = main_city.getMenu();
+        getMenuInflater().inflate(R.menu.pop_main_menu, menuItem);
         main_city.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId())
-                {
+                switch (item.getItemId()) {
                     case R.id.pop_addCity:
                         if (locationBuilder == null) {
                             locationBuilder = LocationSelectorDialogBuilder.getInstance(MainUIActivity.this);
@@ -133,59 +137,63 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
                         break;
 
                     case R.id.pop_deleteCity:
-                        MainUIFragment currentFragment = mSectionAdapter.getCurrentFragment();
-                        if(mSectionAdapter.getLocationList().size()>0)
+
+                        if (SectionsPagerAdapter.getLocationList().size() > 0) {
+                            SectionsPagerAdapter.getLocationList().remove(mSectionAdapter.getCurrentFragment().getLocation());
+                            mSectionAdapter.notifyDataSetChanged();
+                        }
+                        else if(SectionsPagerAdapter.getLocationList().size()==0)
                         {
-                        mSectionAdapter.getLocationList().remove(currentFragment.getLocation());
-                        mSectionAdapter.notifyDataSetChanged();}
+
+                        }
                         else
-                            Toast.makeText(MainUIActivity.this,"无城市",Toast.LENGTH_SHORT);
+                            Toast.makeText(MainUIActivity.this, "无城市", Toast.LENGTH_SHORT);
+                        break;
                 }
                 return false;
             }
         });
 
 
-        locatinMap.put("beijing","北京");
-        locatinMap.put("shanghai","上海");
-        locatinMap.put("tianjin","天津");
-        locatinMap.put("chongqing","重庆");
-        locatinMap.put("xianggang","香港");
-        locatinMap.put("aomen","澳门");
-        locatinMap.put("taizhong","台湾");
-        locatinMap.put("jixi","哈尔滨");
-        locatinMap.put("dalian","大连");
-        locatinMap.put("fengzhen","包头");
-        locatinMap.put("zhangjiakou","张家口");
-        locatinMap.put("luoyang","洛阳");
-        locatinMap.put("linfen","临汾");
-        locatinMap.put("heze","菏泽");
-        locatinMap.put("lianyungang","连云港");
-        locatinMap.put("quzhou","衢州");
-        locatinMap.put("xiamen","厦门");
-        locatinMap.put("ganzhou","赣州");
-        locatinMap.put("xiamen","厦门");
-        locatinMap.put("hefei","合肥");
-        locatinMap.put("wuhan","武汉");
-        locatinMap.put("nanning","南宁");
-        locatinMap.put("zhanjiang","湛江");
-        locatinMap.put("changsha","长沙");
-        locatinMap.put("haikou","海口");
-        locatinMap.put("guiyang","贵阳");
-        locatinMap.put("puer","普洱");
-        locatinMap.put("lasa","拉萨");
-        locatinMap.put("chengdu","成都");
-        locatinMap.put("hanzhong","汉中");
-        locatinMap.put("yinchuan","银川");
-        locatinMap.put("qingyang","庆阳");
-        locatinMap.put("yushu","玉树");
-        locatinMap.put("hami","哈密");
-
+        locatinMap.put("beijing", "北京");
+        locatinMap.put("shanghai", "上海");
+        locatinMap.put("tianjin", "天津");
+        locatinMap.put("chongqing", "重庆");
+        locatinMap.put("xianggang", "香港");
+        locatinMap.put("aomen", "澳门");
+        locatinMap.put("taizhong", "台湾");
+        locatinMap.put("jixi", "哈尔滨");
+        locatinMap.put("dalian", "大连");
+        locatinMap.put("fengzhen", "包头");
+        locatinMap.put("zhangjiakou", "张家口");
+        locatinMap.put("luoyang", "洛阳");
+        locatinMap.put("linfen", "临汾");
+        locatinMap.put("heze", "菏泽");
+        locatinMap.put("lianyungang", "连云港");
+        locatinMap.put("quzhou", "衢州");
+        locatinMap.put("xiamen", "厦门");
+        locatinMap.put("ganzhou", "赣州");
+        locatinMap.put("xiamen", "厦门");
+        locatinMap.put("hefei", "合肥");
+        locatinMap.put("wuhan", "武汉");
+        locatinMap.put("nanning", "南宁");
+        locatinMap.put("zhanjiang", "湛江");
+        locatinMap.put("changsha", "长沙");
+        locatinMap.put("haikou", "海口");
+        locatinMap.put("guiyang", "贵阳");
+        locatinMap.put("puer", "普洱");
+        locatinMap.put("lasa", "拉萨");
+        locatinMap.put("chengdu", "成都");
+        locatinMap.put("hanzhong", "汉中");
+        locatinMap.put("yinchuan", "银川");
+        locatinMap.put("qingyang", "庆阳");
+        locatinMap.put("yushu", "玉树");
+        locatinMap.put("hami", "哈密");
 
 
     }
-    public void pop_main(View view)
-    {
+
+    public void pop_main(View view) {
         main_city.show();
     }
 
@@ -261,10 +269,10 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
         if (location.indexOf("新疆") >= 0)
             pinyinLocation = "hami";
 
-        ArrayList<String> locationlist = SectionsPagerAdapter.getLocationList();
+
         boolean flag = true;
-        for (int i = 0; i < locationlist.size(); i++) {
-            if (locationlist.get(i).equals(pinyinLocation))
+        for (int i = 0; i < SectionsPagerAdapter.getLocationList().size(); i++) {
+            if (SectionsPagerAdapter.getLocationList().get(i).equals(pinyinLocation))
                 flag = false;
         }
 
@@ -273,7 +281,7 @@ public class MainUIActivity extends AppCompatActivity implements View.OnClickLis
             mSectionAdapter.notifyDataSetChanged();
         }
         mSectionAdapter.notifyDataSetChanged();
-        Toast.makeText(MainUIActivity.this,"已添加",Toast.LENGTH_SHORT);
+        Toast.makeText(MainUIActivity.this, "已添加", Toast.LENGTH_SHORT);
 
     }
 

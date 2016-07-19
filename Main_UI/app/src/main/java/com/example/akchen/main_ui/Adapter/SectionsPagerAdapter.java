@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.example.akchen.main_ui.Fragment.MainUIFragment;
-import com.example.akchen.main_ui.R;
 import com.thinkpage.lib.api.TPCity;
 import com.thinkpage.lib.api.TPListeners;
 import com.thinkpage.lib.api.TPWeatherDaily;
@@ -46,6 +45,7 @@ private static  TPWeatherManager weatherManager;
 
         String location=locationList.get(position);
        final  MainUIFragment mainFragment = MainUIFragment.newInstance();
+
         mainFragment.setLocation(location);
 
         // 获取北京当前天气，使用简体中文、摄氏度
@@ -93,6 +93,61 @@ private static  TPWeatherManager weatherManager;
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         currentFragment =(MainUIFragment)object ;
         super.setPrimaryItem(container, position, object);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+      if (locationList.size()>0) {
+          final  MainUIFragment f = (MainUIFragment) super.instantiateItem(container, position);
+          f.setLocation(locationList.get(position));
+          // 获取北京当前天气，使用简体中文、摄氏度
+          weatherManager.getWeatherNow(new TPCity(locationList.get(position))
+                  , TPWeatherManager.TPWeatherReportLanguage.kSimplifiedChinese
+                  , TPWeatherManager.TPTemperatureUnit.kCelsius
+                  , new TPListeners.TPWeatherNowListener() {
+                      @Override
+                      public void onTPWeatherNowAvailable(TPWeatherNow weatherNow, String errorInfo) {
+                          if (weatherNow != null) {
+                              //weatherNow 就是返回的当前天气信息
+                              f.SetWeatherNow(weatherNow);
+                              f.FreshFragment();
+                          } else {
+
+                          }
+                      }
+                  });
+          //未来3天
+          weatherManager.getWeatherDailyArray(new TPCity(locationList.get(position)),
+                  TPWeatherManager.TPWeatherReportLanguage.kSimplifiedChinese,
+                  TPWeatherManager.TPTemperatureUnit.kCelsius,
+                  new Date(),
+                  3,
+                  new TPListeners.TPWeatherDailyListener() {
+                      @Override
+                      public void onTPWeatherDailyAvailable(TPWeatherDaily[] tpWeatherDailies, String s) {
+                          if (tpWeatherDailies != null) {
+                              //weatherNow 就是返回的当前天气信息
+                              f.SetFutureWeather(tpWeatherDailies);
+                              f.FreshFragment();
+                          }
+                      }
+                  }
+
+          );
+          return f;
+      }
+        else
+      {
+          final BlankFragment f = (BlankFragment) super.instantiateItem(container, position);
+
+          return f;
+      }
+
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return this.POSITION_NONE;
     }
 
     public MainUIFragment getCurrentFragment() {

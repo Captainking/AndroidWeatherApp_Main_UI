@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.example.akchen.main_ui.Activity.MainUIActivity"
     android:weightSum="1"
-    android:background="@color/dialog_pressed_bg_color">
+   >
 
 
     <LinearLayout
@@ -62,7 +62,8 @@
             android:layout_height="419dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_weight="0.69" />
+            android:layout_weight="0.69"
+            android:background="@drawable/activity_bg" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
