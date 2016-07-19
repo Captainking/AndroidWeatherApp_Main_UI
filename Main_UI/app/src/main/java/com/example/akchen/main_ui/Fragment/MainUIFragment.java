@@ -4,16 +4,21 @@ package com.example.akchen.main_ui.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.akchen.main_ui.Activity.EditPlanActivity;
+import com.example.akchen.main_ui.Activity.MainUIActivity;
 import com.example.akchen.main_ui.Activity.PlanScheduleActivity;
 import com.example.akchen.main_ui.Adapter.MyShowAdapter;
 import com.example.akchen.main_ui.R;
@@ -48,12 +53,13 @@ public class MainUIFragment extends Fragment {
     private TPAirQuality mAirQuaity = null; //天气质量
     private View mView = null;
     private List<Plan> dataList=new ArrayList<Plan>();
-
+    private SwipeRefreshLayout fresher = MainUIActivity.getFresher();  //刷新控件
+    private List<Plan> planList;
+    private Plan selectedPlan;
     private WeatherDB weatherDB;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private static final String LOCATION = "location";
 
     private ImageButton addPlanButton = null;
     private Button calendarButton = null;
@@ -104,13 +110,14 @@ public class MainUIFragment extends Fragment {
             return;
         if (mView == null)
             return;
+        ((TextView) mView.findViewById(R.id.textView5)).setText("     "+MainUIActivity.getLocatinMap().get(location).toString());
         //显示日期
         Date time = mWeatherNow.lastUpdateDate;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
         String dateString = formatter.format(time);
 
-        String strDate = dateString + "\r\n    " + getWeekOfDate(time);
+        String strDate = "    "+dateString + "\r\n             " + getWeekOfDate(time);
         TextView txtDate = (TextView) mView.findViewById(R.id.id_weather_time);
         txtDate.setText(strDate);
         //显示天气icon
@@ -158,27 +165,58 @@ public class MainUIFragment extends Fragment {
         txtDay2.setText(day2);
         txtDay3.setText(day3);
         //显示记事内容
-        ListView a = (ListView) mView.findViewById(R.id.id_list);
-//        a.setScrollbarFadingEnabled(true);
-
-        dataList=weatherDB.loadPlan(1);
+        final ListView listView = (ListView) mView.findViewById(R.id.id_list);
+        planList=weatherDB.loadPlan(1);
         //用于显示那天干嘛 什么时候 String内省 自己构造一个ArrayList就行 然后自己在GetView里加监听器
         List<String> list = new ArrayList<String>();
-        if(dataList!=null)
+        if(planList!=null)
         {
             list.clear();
-            for(Plan plan:dataList)
+            for(Plan plan:planList)
             {
                 list.add(plan.getTimeStart()+"   "+plan.getPlanName());
             }
         }
         MyShowAdapter madapter = new MyShowAdapter(this.getActivity(), list);
-        a.setAdapter(madapter);
+        listView.setAdapter(madapter);
+
+//        int totalHeight = 0;
+//        for (int i = 0; i < madapter.getCount(); i++) {
+//            View listItem = madapter.getView(i, null, listView);
+//            listItem.measure(0, 0);
+//            totalHeight += listItem.getMeasuredHeight();
+//        }
+
+       // ViewGroup.LayoutParams params = listView.getLayoutParams();
+        //params.height = totalHeight + (listView.getDividerHeight() * (madapter.getCount()-1));
+        //((ViewGroup.MarginLayoutParams)params).setMargins(10, 10, 10, 10);
+        //listView.setLayoutParams(params);
+
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                listView.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedPlan=planList.get(i);
+               Intent intent = new Intent(getActivity(),EditPlanActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("plan",selectedPlan);
+                intent.putExtras(bundle);
+                intent.putExtra("CURRENT_LEAVE",1);
+                getActivity().startActivity(intent);
+            }
+        });
      weatherIconView.setFocusable(true);
         weatherIconView.setFocusableInTouchMode(true);
         weatherIconView.requestFocus();
 
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -236,19 +274,40 @@ public class MainUIFragment extends Fragment {
             }
         });
         FreshFragment();
+        ScrollView scrollView =( ScrollView) rt.findViewById(R.id.id_fragment_scollview);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        int scrollY=view.getScrollY();
+                        if(scrollY==0) {
+                            //顶部
+                            fresher.setEnabled(true);
+                        }
+                        else
+                        {
+                            fresher.setEnabled(false);
+                        }
+                }
+
+                return false;
+            }
+        });
         return rt;
     }
 
     public static MainUIFragment newInstance() {
         MainUIFragment fragment = new MainUIFragment();
-//
-//        Bundle args = new Bundle();
-//        args.putString(LOCATION, location);
-//        fragment.setArguments(args);
-//        SectionsPagerAdapter.getFragmentsList().add(SectionsPagerAdapter.getFragmentsList().size(), fragment);
 
         return fragment;
     }
 
+    public String getWeatherInfo()
+    {
+        String weatherInfo="";
+        weatherInfo=mWeatherNow.text+" "+mWeatherNow.temperature+" ℃";
+        return weatherInfo;
+    }
 
 }

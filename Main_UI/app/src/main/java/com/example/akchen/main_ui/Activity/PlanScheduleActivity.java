@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
@@ -23,20 +24,22 @@ import java.util.List;
  * Created by Jake on 16/7/11.
  */
 
-public class PlanScheduleActivity extends Activity {
+public class PlanScheduleActivity extends AppCompatActivity {
 
     CalendarView cv;
     String time;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planschedule);
-
+        getSupportActionBar().hide();
         //显示当天的计划
         WeatherDB wd = WeatherDB.getInstance(PlanScheduleActivity.this);
-        final Time t=new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
+        final Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
+
         String year =String.valueOf(t.year) ;
         String month="01";
         String date="01";
@@ -67,12 +70,13 @@ public class PlanScheduleActivity extends Activity {
             listView.setAdapter(adapter0);
         }
 
-        cv= (CalendarView) findViewById(R.id.calendarView);
+        cv = (CalendarView) findViewById(R.id.calendarView);
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
 
                 WeatherDB w = WeatherDB.getInstance(PlanScheduleActivity.this);
+
                 String y =String.valueOf(year) ;
                 String m="01";
                 String d="01";
@@ -97,20 +101,20 @@ public class PlanScheduleActivity extends Activity {
                     plans1[i]=w.queryFromTime(startime,1).get(i).getPlanName();
                 }
                 //适配器
-                ArrayAdapter<String>adapter=new ArrayAdapter<String>(PlanScheduleActivity.this,R.layout.planschedulerow,plans1);
-                ListView listView= (ListView) findViewById(R.id.planScheduleListView);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PlanScheduleActivity.this, R.layout.planschedulerow, plans1);
+                ListView listView = (ListView) findViewById(R.id.planScheduleListView);
                 listView.setAdapter(adapter);
                 //测试
-
             }
         });
+
 
         ListView listView= (ListView) findViewById(R.id.planScheduleListView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                WeatherDB weatherDB=WeatherDB.getInstance(PlanScheduleActivity.this);
+                WeatherDB weatherDB = WeatherDB.getInstance(PlanScheduleActivity.this);
 
                 Plan plan=weatherDB.queryFromTime(time,1).get(i);
                 Bundle data=new Bundle();

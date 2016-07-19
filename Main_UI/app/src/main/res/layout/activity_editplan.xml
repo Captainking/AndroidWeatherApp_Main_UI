@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-
+    android:background="#FFFFFF"
     android:orientation="vertical"
+
     tools:context="com.example.akchen.main_ui.Activity.EditPlanActivity" >
 <LinearLayout
     android:layout_width="match_parent"
@@ -12,7 +12,6 @@
     android:id="@+id/liner1"
     android:orientation="horizontal"
     android:background="@color/home_round_progress_bar_blue"
-
     >
     <Button
         android:layout_width="wrap_content"
@@ -20,9 +19,9 @@
         android:id="@+id/back"
         android:layout_gravity="center"
         android:layout_margin="5dip"
-        android:textColor="#ffffff"
+        android:textColor="@color/text_color"
+        android:background="#00000000"
         android:text="Back"
-        android:background="@color/home_round_progress_bar_blue"
         />
     <TextView
         android:layout_width="0dip"
@@ -32,21 +31,20 @@
         android:id="@+id/Title"
         android:layout_gravity="center"
         android:text="Title Text"
-        android:textColor="#ffffff"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
-        android:background="@color/home_round_progress_bar_blue"
-
+        android:background="#00000000"
         />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dip"
-        android:textColor="#ffffff"
+        android:background="#00000000"
+        android:textColor="@color/text_color"
         android:id="@+id/Menu"
         android:text="Menu"
         android:onClick="popupmenu"
-        android:background="@color/home_round_progress_bar_blue"
         />
 
 </LinearLayout>
@@ -64,8 +62,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="起始日期："
-            android:textColor="@color/home_round_progress_bar_blue"
-            />
+            android:textColor="@color/home_round_progress_bar_blue" />
 
         <TextView
             android:id="@+id/tv_date"
@@ -74,17 +71,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="2014-12-10"
-            android:textColor="@color/home_round_progress_bar_blue"
-            />
+            android:textColor="@color/home_round_progress_bar_blue" />
         <TextView
             style="@style/Base.Theme.AppCompat.Dialog.FixedSize"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="结束日期"
-            android:textColor="@color/home_round_progress_bar_blue"
-
-            />
+            android:textColor="@color/home_round_progress_bar_blue" />
         <TextView
             android:id="@+id/endTime"
             style="@style/Base.Theme.AppCompat.Dialog.FixedSize"
@@ -92,8 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="2016-07-9"
-            android:textColor="@color/home_round_progress_bar_blue"
-            />
+            android:textColor="@color/home_round_progress_bar_blue" />
     </LinearLayout>
 
     <LinearLayout
@@ -101,25 +94,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:layout_centerInParent="true"
-        android:weightSum="1">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="341dp"
-            android:id="@+id/edit_text"
-            android:textColor="@color/textcolor_black"
-            android:layout_below="@+id/linearLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/setbar_bg"
-            android:enabled="false"
-            android:gravity="top|left"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.95"
-            />
+        android:layout_centerInParent="true">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="287dp"
+                android:id="@+id/edit_text"
+                android:textColor="@color/textcolor_black"
+                android:layout_below="@+id/linearLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@null"
+                android:enabled="false"
+                android:gravity="top|left"
+                />
 
 
     </LinearLayout>

@@ -6,10 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.akchen.main_ui.Activity.MainUIActivity"
-
-
     android:weightSum="1"
-    android:background="@color/dialog_pressed_bg_color">
+   >
 
 
     <LinearLayout
@@ -22,22 +20,22 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/main_add"
+            android:id="@+id/main_city"
             android:layout_gravity="center"
             android:layout_margin="5dip"
             android:textColor="#fff"
-            android:text="add  "
+            android:text="city "
             android:layout_weight="1"
+            android:onClick="pop_main"
             android:background="#00000000" />
 
         <TextView
-            android:layout_width="0dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:id="@+id/Title"
             android:layout_gravity="center"
-            android:text="@string/city"
+            android:text="天气App"
             android:textColor="#fff"
             android:textSize="24sp"
             />
@@ -47,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dip"
-            android:textColor="#fff"
+            android:textColor="#FFF"
             android:text="share "
             android:id="@+id/main_share"
             android:layout_weight="1"
@@ -56,14 +54,16 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="419dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_weight="0.69" />
+        android:layout_height="match_parent"
+        android:id="@+id/fresher">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="419dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight="0.69"
+            android:background="@drawable/activity_bg" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
